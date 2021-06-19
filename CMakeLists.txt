@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 
 project(game_monitor)
 
@@ -16,14 +16,21 @@ set(SRCS
 	src/pos_types.h
 	src/udp_thread.cpp
 	src/udp_thread.h
-	src/capture.cpp
-	src/capture.h
+	src/aspect_ratio_pixmap_label.cpp
+	src/field_space_manager.cpp
+	src/field_space_manager.h
+	src/gcreceiver.cpp
+	src/gcreceiver.h
+	src/game_state.cpp
+	src/game_state.h
+	src/setting_dialog.cpp
 )
 
 set(MOC_HEADERS
 	src/interface.h
 	src/udp_thread.h
-	src/capture.h
+	src/aspect_ratio_pixmap_label.h
+	src/setting_dialog.h
 )
 
 include(FindSDL)
@@ -35,8 +42,6 @@ endif(NOT_SDL_FOUND)
 find_package(Qt5Widgets REQUIRED)
 find_package(Qt5Gui REQUIRED)
 find_package(Qt5Network REQUIRED)
-find_package(Qt5Multimedia REQUIRED)
-find_package(Qt5MultimediaWidgets REQUIRED)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
@@ -44,18 +49,19 @@ set(CMAKE_AUTOMOC ON)
 set(QT_USE_QTMAIN true)
 set(QT_USE_QTGUI true)
 set(QT_USE_QTNETWORK true)
-set(QT_USE_QTOPENGL true)
-set(QT_USE_QTMULTIMEDIA true)
 add_definitions(${QT_DEFINITIONS})
 include_directories(${CMAKE_BINARY_DIR})
 
-set(CMAKE_BUILD_TYPE Debug)
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING
+		"Default build type: RelWithDebInfo" FORCE)
+endif()
 
 include_directories(src)
 add_executable(game_monitor ${SRCS} ${MOC_SRCS} ${RES_SORUCES})
-target_link_libraries(game_monitor ${QT_LIBRARIES})
-target_link_libraries(game_monitor Qt5::Widgets)
-target_link_libraries(game_monitor Qt5::Network)
-target_link_libraries(game_monitor Qt5::Multimedia)
-target_link_libraries(game_monitor Qt5::MultimediaWidgets)
+target_link_libraries(game_monitor
+	${QT_LIBRARIES}
+	Qt5::Widgets
+	Qt5::Network
+)
 

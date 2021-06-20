@@ -875,9 +875,9 @@ void Interface::drawRobotInformation(QPainter &painter, const int self_x, const 
 	std::string s(msg); // message without role name
 	s.erase(s.begin(), s.begin() + s.find(" "));
 	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_y, QString(s.c_str()));
-	QString voltage_str = QString::number(voltage) + "[V] / " + QString::number(temperature) + "[C]";
-	constexpr int font_offset_2y = 20 + font_size / 2 + font_size + 15;
-	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_2y, voltage_str);
+//	QString voltage_str = QString::number(voltage) + "[V] / " + QString::number(temperature) + "[C]";
+//	constexpr int font_offset_2y = 20 + font_size / 2 + font_size + 15;
+//	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_2y, voltage_str);
 
 	constexpr int bar_width = 8;
 	constexpr int bar_height = frame_height - 4;

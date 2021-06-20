@@ -503,12 +503,13 @@ Pos Interface::globalPosToImagePos(Pos gpos)
 	Pos ret_pos;
 	const int field_image_width = settings->value("field_image/width").toInt();
 	const int field_image_height = settings->value("field_image/height").toInt();
-	const int field_size_x = settings->value("field_size/x").toInt();
-	const int field_size_y = settings->value("field_size/y").toInt();
+	const int display_size_x = field_param.field_length + field_param.border_strip_width * 2;
+	const int display_size_y = field_param.field_width + field_param.border_strip_width * 2;
+
 	ret_pos.x =
-		field_image_width - (int)((double)gpos.x * ((double)field_image_width / (double)field_size_x) + ((double)field_image_width / 2));
+		field_image_width - (int)((double)gpos.x * ((double)field_image_width / (double)display_size_x) + ((double)field_image_width / 2));
 	ret_pos.y =
-		                    (int)((double)gpos.y * ((double)field_image_height / (double)field_size_y) + ((double)field_image_height / 2));
+		                    (int)((double)gpos.y * ((double)field_image_height / (double)display_size_y) + ((double)field_image_height / 2));
 	ret_pos.th = -gpos.th + M_PI;
 	return ret_pos;
 }

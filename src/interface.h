@@ -68,10 +68,12 @@ public:
 		goal_width(2.6),
 		goal_height(1.8),
 		goal_area_length(1.0),
-		goal_area_width(5.0),
-		penalty_mark_distance(2.1),
+		goal_area_width(3.0),
+		penalty_mark_distance(1.5),
 		center_circle_diameter(1.5),
-		border_strip_width(0.7)
+		border_strip_width(1.0),
+		penalty_area_length(2.0),
+		penalty_area_width(5.0)
 	{
 	}
 	~FieldParameter() {};
@@ -85,6 +87,8 @@ public:
 	const double penalty_mark_distance;
 	const double center_circle_diameter;
 	const double border_strip_width;
+	const double penalty_area_length;
+	const double penalty_area_width;
 };
 
 class FieldParameterInt
@@ -101,7 +105,9 @@ public:
 		goal_area_width(static_cast<int>(param.goal_area_width * 100)),
 		penalty_mark_distance(static_cast<int>(param.penalty_mark_distance * 100)),
 		center_circle_diameter(static_cast<int>(param.center_circle_diameter * 100)),
-		border_strip_width(static_cast<int>(param.border_strip_width * 100))
+		border_strip_width(static_cast<int>(param.border_strip_width * 100)),
+		penalty_area_length(static_cast<int>(param.penalty_area_length * 100)),
+		penalty_area_width(static_cast<int>(param.penalty_area_width * 100))
 	{
 	}
 	~FieldParameterInt() {};
@@ -115,6 +121,8 @@ public:
 	const int penalty_mark_distance;
 	const int center_circle_diameter;
 	const int border_strip_width;
+	const int penalty_area_length;
+	const int penalty_area_width;
 };
 
 class PositionMarker {

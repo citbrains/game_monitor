@@ -233,6 +233,16 @@ void Interface::drawField()
 	p.drawLine(right_goal_area_x, goal_area_top, right_goal_area_x, goal_area_bottom);
 	p.drawLine(right_goal_area_x, goal_area_top, field_right, goal_area_top);
 	p.drawLine(right_goal_area_x, goal_area_bottom, field_right, goal_area_bottom);
+	const int left_penalty_area_x = field_left + field_param.penalty_area_length;
+	const int right_penalty_area_x = field_right - field_param.penalty_area_length;
+	const int penalty_area_top = field_param.field_width / 2 - field_param.penalty_area_width / 2 + field_top;
+	const int penalty_area_bottom = penalty_area_top + field_param.penalty_area_width;
+	p.drawLine(left_penalty_area_x, penalty_area_top, left_penalty_area_x, penalty_area_bottom);
+	p.drawLine(left_penalty_area_x, penalty_area_top, field_left, penalty_area_top);
+	p.drawLine(left_penalty_area_x, penalty_area_bottom, field_left, penalty_area_bottom);
+	p.drawLine(right_penalty_area_x, penalty_area_top, right_penalty_area_x, penalty_area_bottom);
+	p.drawLine(right_penalty_area_x, penalty_area_top, field_right, penalty_area_top);
+	p.drawLine(right_penalty_area_x, penalty_area_bottom, field_right, penalty_area_bottom);
 	const int center_of_field_y = field_top + field_param.field_width / 2;
 	const int &dia = field_param.center_circle_diameter;
 	const int radius = dia / 2; // radius of center circle

@@ -233,6 +233,16 @@ void Interface::drawField()
 	p.drawLine(right_goal_area_x, goal_area_top, right_goal_area_x, goal_area_bottom);
 	p.drawLine(right_goal_area_x, goal_area_top, field_right, goal_area_top);
 	p.drawLine(right_goal_area_x, goal_area_bottom, field_right, goal_area_bottom);
+	const int left_penalty_area_x = field_left + field_param.penalty_area_length;
+	const int right_penalty_area_x = field_right - field_param.penalty_area_length;
+	const int penalty_area_top = field_param.field_width / 2 - field_param.penalty_area_width / 2 + field_top;
+	const int penalty_area_bottom = penalty_area_top + field_param.penalty_area_width;
+	p.drawLine(left_penalty_area_x, penalty_area_top, left_penalty_area_x, penalty_area_bottom);
+	p.drawLine(left_penalty_area_x, penalty_area_top, field_left, penalty_area_top);
+	p.drawLine(left_penalty_area_x, penalty_area_bottom, field_left, penalty_area_bottom);
+	p.drawLine(right_penalty_area_x, penalty_area_top, right_penalty_area_x, penalty_area_bottom);
+	p.drawLine(right_penalty_area_x, penalty_area_top, field_right, penalty_area_top);
+	p.drawLine(right_penalty_area_x, penalty_area_bottom, field_right, penalty_area_bottom);
 	const int center_of_field_y = field_top + field_param.field_width / 2;
 	const int &dia = field_param.center_circle_diameter;
 	const int radius = dia / 2; // radius of center circle
@@ -865,9 +875,9 @@ void Interface::drawRobotInformation(QPainter &painter, const int self_x, const 
 	std::string s(msg); // message without role name
 	s.erase(s.begin(), s.begin() + s.find(" "));
 	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_y, QString(s.c_str()));
-	QString voltage_str = QString::number(voltage) + "[V] / " + QString::number(temperature) + "[C]";
-	constexpr int font_offset_2y = 20 + font_size / 2 + font_size + 15;
-	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_2y, voltage_str);
+//	QString voltage_str = QString::number(voltage) + "[V] / " + QString::number(temperature) + "[C]";
+//	constexpr int font_offset_2y = 20 + font_size / 2 + font_size + 15;
+//	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_2y, voltage_str);
 
 	constexpr int bar_width = 8;
 	constexpr int bar_height = frame_height - 4;

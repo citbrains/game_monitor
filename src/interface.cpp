@@ -873,13 +873,20 @@ void Interface::drawRobotInformation(QPainter &painter, const int self_x, const 
 	painter.setFont(font);
 	constexpr int font_offset_x = 12;
 	constexpr int font_offset_y = 14 + font_size / 2;
-	std::string s(msg); // message without role name
-	s.erase(s.begin(), s.begin() + s.find(" "));
-	std::string s2 = s.substr(s.find(" "));
+	std::string s(msg), s2(""), s3(""); // message without role name
+	auto offset = s.find(" ") + 1;
+	if (offset != std::string::npos) {
+		auto pos = s.find(" ", offset);
+		if (pos != std::string::npos) {
+			s2 = s.substr(offset, pos - offset);
+			offset = pos + 1;
+			s3 = s.substr(offset);
+		}
+		else s2 = s.substr(offset);
+	}
 	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_y, QString(s2.c_str()));
-	s2.erase(s2.begin(), s2.begin() + s2.find(" "));
 	constexpr int font_offset_2y = 14 + font_size / 2 + font_size + 10;
-	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_2y, QString(s2.c_str()));
+	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_2y, QString(s3.c_str()));
 
 	constexpr int bar_width = 8;
 	constexpr int bar_height = frame_height - 4;

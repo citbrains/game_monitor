@@ -845,8 +845,8 @@ void Interface::drawRobotMarker(QPainter &painter, const int self_x, const int s
 
 void Interface::drawRobotInformation(QPainter &painter, const int self_x, const int self_y, const double theta, const int robot_id, const QColor marker_color, const double self_conf, const double ball_conf, const std::string msg, const double voltage, const double temperature)
 {
-	constexpr int frame_width = 200;
-	constexpr int frame_height = 80;
+	constexpr int frame_width = 300;
+	constexpr int frame_height = 50;
 	int frame_x, frame_y;
 	bool success = field_space.getEmptySpace(frame_x, frame_y, frame_width, frame_height, self_x, self_y);
 	if(!success) {

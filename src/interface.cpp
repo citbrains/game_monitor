@@ -37,8 +37,9 @@ Interface::Interface(): fLogging(true), fReverse(false), fViewGoalpost(false), f
 
 	// Run receive thread
 	const int base_udp_port = settings->value("network/port").toInt();
-	for(int i = 0; i < max_robot_num; i++)
-		th.push_back(new UdpServer(base_udp_port + i));
+	th.push_back(new UdpServer(base_udp_port));
+//	for(int i = 0; i < max_robot_num; i++)
+//		th.push_back(new UdpServer(base_udp_port + i));
 
 	constexpr int gc_receive_port = 3838;
 	gc_thread = new GCReceiver(gc_receive_port);
@@ -269,11 +270,11 @@ void Interface::dropEvent(QDropEvent *e)
 void Interface::connection(void)
 {
 	connect(th[0], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData1(struct comm_info_T)));
-	connect(th[1], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData2(struct comm_info_T)));
-	connect(th[2], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData3(struct comm_info_T)));
-	connect(th[3], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData4(struct comm_info_T)));
-	connect(th[4], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData5(struct comm_info_T)));
-	connect(th[5], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData6(struct comm_info_T)));
+//	connect(th[1], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData2(struct comm_info_T)));
+//	connect(th[2], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData3(struct comm_info_T)));
+//	connect(th[3], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData4(struct comm_info_T)));
+//	connect(th[4], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData5(struct comm_info_T)));
+//	connect(th[5], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData6(struct comm_info_T)));
 	connect(reverse, SIGNAL(stateChanged(int)), this, SLOT(reverseField(int)));
 	connect(log1Button, SIGNAL(clicked(void)), this, SLOT(logSpeed1(void)));
 	connect(log2Button, SIGNAL(clicked(void)), this, SLOT(logSpeed2(void)));
@@ -288,8 +289,9 @@ void Interface::connection(void)
 
 void Interface::decodeData1(struct comm_info_T comm_info)
 {
-	decodeUdp(comm_info, 0);
-	statusBar->showMessage(QString("Receive data from Robot 1"));
+	int id = (int)(comm_info.id & 0x7F);
+	decodeUdp(comm_info, id - 1);
+	statusBar->showMessage(QString("Receive data from Robot"));
 }
 
 void Interface::decodeData2(struct comm_info_T comm_info)

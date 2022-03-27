@@ -119,7 +119,7 @@ void Interface::initializeConfig(void)
 	settings->setValue("size/font_size", settings->value("size/font_size", 48));
 	settings->setValue("size/display_minimum_height", settings->value("size/display_minimum_height", 50));
 	// using UDP communication port offset
-	settings->setValue("network/port", settings->value("network/port", 7110));
+	settings->setValue("network/port", settings->value("network/port", 3737));
 }
 
 void Interface::createWindow(void)

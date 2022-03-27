@@ -1,3 +1,4 @@
+#include "stdio.h"
 #include "game_state.h"
 
 GameState::GameState() : m_game_state(0), m_remaining_time(0), m_secondary_time(0), m_score1(0), m_score2(0), f_update_score1(false), f_update_score2(false)
@@ -11,7 +12,7 @@ GameState::~GameState()
 void GameState::setData(const char *in_data, const unsigned int data_len)
 {
 	const unsigned char *data = reinterpret_cast<const unsigned char *>(in_data);
-	constexpr unsigned int packet_size = 640;
+	constexpr unsigned int packet_size = 688;
 	if(data_len != packet_size)
 		return;
 	decodeData(data + 0);

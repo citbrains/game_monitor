@@ -8,7 +8,7 @@
 #include "pos_types.h"
 
 static const int NUM_PLAYERS = 6;
-static const int COMM_INFO_PORT = 7110;
+static const int COMM_INFO_PORT = 3737;
 static const int MAX_COMM_INFO_OBJ = 7;
 static const int MAX_STRING = 74;
 

@@ -106,7 +106,7 @@ void Interface::initializeConfig(void)
 	settings->setValue("field_size/y", settings->value("field_size/y", field_param.field_width * 10));
 	settings->setValue("field_size/line_width", settings->value("field_size/line_width", 5));
 	// marker configurations
-	settings->setValue("marker/pen_size", settings->value("marker/pen_size", 3));
+	settings->setValue("marker/pen_size", settings->value("marker/pen_size", 6));
 	settings->setValue("marker/robot_size", settings->value("marker/robot_size", 15));
 	settings->setValue("marker/ball_size", settings->value("marker/ball_size", 6));
 	settings->setValue("marker/goal_pole_size", settings->value("marker/goal_pole_size", 5));
@@ -281,6 +281,7 @@ void Interface::connection(void)
 	connect(log5Button, SIGNAL(clicked(void)), this, SLOT(logSpeed5(void)));
 	connect(log_slider, SIGNAL(sliderPressed(void)), this, SLOT(pausePlayingLog(void)));
 	connect(log_slider, SIGNAL(sliderReleased(void)), this, SLOT(changeLogPosition(void)));
+	connect(gc_thread, SIGNAL(gameStateChanged(int)), this, SLOT(setGameState(int)));
 	connect(gc_thread, SIGNAL(remainingTimeChanged(int)), this, SLOT(setRemainingTime(int)));
 	connect(gc_thread, SIGNAL(secondaryTimeChanged(int)), this, SLOT(setSecondaryTime(int)));
 	connect(gc_thread, SIGNAL(scoreChanged1(int)), this, SLOT(setScore1(int)));
@@ -364,17 +365,19 @@ void Interface::decodeUdp(struct comm_info_T comm_info, int num)
 		strcpy(positions[num].color, "blue");
 	} else if(strstr((const char *)comm_info.command, "Keeper")) {
 		// Orange
-		strcpy(positions[num].color, "orange");
+		strcpy(positions[num].color, "gray");
 	} else {
 		// Black
 		strcpy(positions[num].color, "black");
 	}
 	positions[num].message = std::string((char *)comm_info.command);
+	positions[num].behavior_name = std::string((char *)comm_info.behavior_name);
 
 	positions[num].enable_pos = false;
 	positions[num].enable_ball = false;
 	positions[num].enable_goal_pole[0] = false;
 	positions[num].enable_goal_pole[1] = false;
+	positions[num].enable_target_pos = false;
 	int goal_pole_index = 0;
 	for(int i = 0; i < MAX_COMM_INFO_OBJ; i++) {
 		Object obj;
@@ -395,19 +398,22 @@ void Interface::decodeUdp(struct comm_info_T comm_info, int num)
 			positions[num].enable_goal_pole[goal_pole_index] = true;
 			goal_pole_index++;
 		}
+		if(obj.type == ENEMY) {
+			positions[num].target_pos = globalPosToImagePos(obj.pos);
+			positions[num].enable_target_pos = true;
+		}
 	}
 	updateMap();
 	// Voltage
 	const double voltage = (comm_info.voltage << 3) / 100.0;
 	positions[num].voltage = voltage;
 	positions[num].temperature = comm_info.temperature;
-	log_writer.setEnable(false);
 	log_writer.write(num + 1, color_str.toStdString().c_str(), (int)comm_info.fps, (double)voltage,
 		(int)positions[num].pos.x, (int)positions[num].pos.y, (float)positions[num].pos.th,
 		(int)positions[num].ball.x, (int)positions[num].ball.y,
 		(int)positions[num].goal_pole[0].x, (int)positions[num].goal_pole[0].y,
 		(int)positions[num].goal_pole[1].x, (int)positions[num].goal_pole[1].y,
-		(const char *)comm_info.command, (int)comm_info.cf_own, (int)comm_info.cf_ball);
+		(const char *)comm_info.command, (const char *)comm_info.behavior_name, (int)comm_info.cf_own, (int)comm_info.cf_ball);
 }
 
 void Interface::setGameState(int game_state)
@@ -505,13 +511,12 @@ Pos Interface::globalPosToImagePos(Pos gpos)
 	Pos ret_pos;
 	const int field_image_width = settings->value("field_image/width").toInt();
 	const int field_image_height = settings->value("field_image/height").toInt();
-	const int display_size_x = (field_param.field_length + field_param.border_strip_width * 2) * 10;
-	const int display_size_y = (field_param.field_width  + field_param.border_strip_width * 2) * 10;
-
+	const int field_size_x = settings->value("field_size/x").toInt();
+	const int field_size_y = settings->value("field_size/y").toInt();
 	ret_pos.x =
-		field_image_width - (int)((double)gpos.x * ((double)field_image_width / (double)display_size_x) + ((double)field_image_width / 2));
+		field_image_width - (int)((double)gpos.x * ((double)field_param.field_length / (double)field_size_x) + ((double)field_param.field_length / 2) + field_param.border_strip_width);
 	ret_pos.y =
-		                    (int)((double)gpos.y * ((double)field_image_height / (double)display_size_y) + ((double)field_image_height / 2));
+		                    (int)((double)gpos.y * ((double)field_param.field_width / (double)field_size_y) + ((double)field_param.field_width / 2) + field_param.border_strip_width);
 	ret_pos.th = -gpos.th + M_PI;
 	return ret_pos;
 }
@@ -749,12 +754,13 @@ void Interface::setData(LogData log_data)
 			strcpy(positions[num].color, "blue");
 		} else if(strstr((const char *)msg, "Keeper")) {
 			// Orange
-			strcpy(positions[num].color, "orange");
+			strcpy(positions[num].color, "gray");
 		} else {
 			// Black
 			strcpy(positions[num].color, "black");
 		}
 		positions[num].message = std::string(msg);
+		positions[num].behavior_name = std::string(msg); // TODO
 
 		time_t timer;
 		timer = time(NULL);
@@ -845,10 +851,10 @@ void Interface::drawRobotMarker(QPainter &painter, const int self_x, const int s
 	}
 }
 
-void Interface::drawRobotInformation(QPainter &painter, const int self_x, const int self_y, const double theta, const int robot_id, const QColor marker_color, const double self_conf, const double ball_conf, const std::string msg, const double voltage, const double temperature)
+void Interface::drawRobotInformation(QPainter &painter, const int self_x, const int self_y, const double theta, const int robot_id, const QColor marker_color, const double self_conf, const double ball_conf, const std::string msg, const std::string behavior_name, const double voltage, const double temperature)
 {
-	constexpr int frame_width = 300;
-	constexpr int frame_height = 50;
+	constexpr int frame_width = 330;
+	constexpr int frame_height = 120;
 	int frame_x, frame_y;
 	bool success = field_space.getEmptySpace(frame_x, frame_y, frame_width, frame_height, self_x, self_y);
 	if(!success) {
@@ -870,25 +876,20 @@ void Interface::drawRobotInformation(QPainter &painter, const int self_x, const 
 
 	painter.setPen(QPen(Qt::red));
 	QFont font = painter.font();
-	constexpr int font_size = 14;
+	constexpr int font_size = 20;
 	font.setPointSize(font_size);
 	painter.setFont(font);
 	constexpr int font_offset_x = 12;
-	constexpr int font_offset_y = 14 + font_size / 2;
-	std::string s(msg), s2(""), s3(""); // message without role name
-	auto offset = s.find(" ") + 1;
-	if (offset != std::string::npos) {
-		auto pos = s.find(" ", offset);
-		if (pos != std::string::npos) {
-			s2 = s.substr(offset, pos - offset);
-			offset = pos + 1;
-			s3 = s.substr(offset);
-		}
-		else s2 = s.substr(offset);
-	}
-	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_y, QString(s2.c_str()));
-	constexpr int font_offset_2y = 14 + font_size / 2 + font_size + 10;
-	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_2y, QString(s3.c_str()));
+	constexpr int font_offset_1y = 20 + font_size / 2 + (font_size + 15) * 0;
+	std::string s(msg); // message without role name
+	s.erase(s.begin(), s.begin() + s.find(" "));
+	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_1y, QString(s.c_str()));
+	QString behavior_str(behavior_name.c_str());
+	constexpr int font_offset_2y = 20 + font_size / 2 + (font_size + 15) * 1;
+	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_2y, behavior_str);
+	QString voltage_str = QString::number(voltage) + "[V] / " + QString::number(temperature) + "[C]";
+	constexpr int font_offset_3y = 20 + font_size / 2 + (font_size + 15) * 2;
+	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_3y, voltage_str);
 
 	constexpr int bar_width = 8;
 	constexpr int bar_height = frame_height - 4;
@@ -901,6 +902,16 @@ void Interface::drawRobotInformation(QPainter &painter, const int self_x, const 
 	const int bar_fill_top = frame_top + 2 + (bar_height - bar_fill_height);
 	path_bar.addRect(bar_left, bar_fill_top, bar_width, bar_fill_height);
 	painter.fillPath(path_bar, bar_color);
+}
+
+void Interface::drawTargetPosMarker(QPainter &painter, const int target_x, const int target_y, const int self_x, const int self_y)
+{
+	constexpr int marker_radius = 10;
+	const QColor green(0x00, 0xFF, 0x00);
+	constexpr int pen_size = 2;
+	painter.setPen(QPen(green, pen_size));
+	painter.drawEllipse(target_x - marker_radius, target_y - marker_radius, marker_radius * 2, marker_radius * 2);
+	painter.drawLine(self_x, self_y, target_x, target_y);
 }
 
 void Interface::drawBallMarker(QPainter &painter, const int ball_x, const int ball_y, const int owner_id, const int distance_ball_and_robot, const int self_x, const int self_y)
@@ -978,14 +989,19 @@ void Interface::updateMap(void)
 			int self_y = positions[i].pos.y;
 			int ball_x = positions[i].ball.x;
 			int ball_y = positions[i].ball.y;
+			int target_x = positions[i].target_pos.x;
+			int target_y = positions[i].target_pos.y;
 			if(flag_reverse) {
 				self_x = field_w - self_x;
 				self_y = field_h - self_y;
 				ball_x = field_w - ball_x;
 				ball_y = field_h - ball_y;
+				target_x = field_w - target_x;
+				target_y = field_h - target_y;
 			}
 			field_space.setObjectPos(self_x, self_y, 200, 200);
 			field_space.setObjectPos(ball_x, ball_y, 50, 50);
+			field_space.setObjectPos(target_x, target_y, 50, 50);
 			const int time_limit = settings->value("marker/time_up_limit").toInt();
 			const int elapsed = (local_time->tm_min - positions[i].lastReceiveTime.tm_min) * 60 + (local_time->tm_sec - positions[i].lastReceiveTime.tm_sec);
 			if(elapsed > time_limit) {
@@ -1013,9 +1029,7 @@ void Interface::updateMap(void)
 			const int robot_id = i + 1;
 			const QColor color = getColor(positions[i].color);
 			if(fViewRobotInformation)
-				drawRobotInformation(paint, self_x, self_y, theta, robot_id, color, positions[i].self_conf, positions[i].ball_conf, positions[i].message, positions[i].voltage, positions[i].temperature);
-			drawRobotMarker(paint, self_x, self_y, theta, robot_id, color, positions[i].self_conf);
-
+				drawRobotInformation(paint, self_x, self_y, theta, robot_id, color, positions[i].self_conf, positions[i].ball_conf, positions[i].message, positions[i].behavior_name, positions[i].voltage, positions[i].temperature);
 			if(positions[i].enable_ball && positions[i].ball_conf > 0) {
 				int ball_x = positions[i].ball.x;
 				int ball_y = positions[i].ball.y;
@@ -1027,13 +1041,21 @@ void Interface::updateMap(void)
 				const int owner_id = i + 1;
 				drawBallMarker(paint, ball_x, ball_y, owner_id, distance_ball_and_robot, self_x, self_y);
 			}
+			if(positions[i].enable_target_pos) {
+				int target_x = positions[i].target_pos.x;
+				int target_y = positions[i].target_pos.y;
+				if(flag_reverse) {
+					target_x = field_w - target_x;
+					target_y = field_h - target_y;
+				}
+				drawTargetPosMarker(paint, target_x, target_y, self_x, self_y);
+			}
 			// draw goal posts
 			if(fViewGoalpost) {
 				for(int j = 0; j < 2; j++) {
 					if(positions[i].enable_goal_pole[j]) {
 						int goal_pole_x = positions[i].goal_pole[j].x;
 						int goal_pole_y = positions[i].goal_pole[j].y;
-						bool flag_reverse = false;
 						if(flag_reverse) {
 							goal_pole_x = field_w - goal_pole_x;
 							goal_pole_y = field_h - goal_pole_y;
@@ -1042,6 +1064,7 @@ void Interface::updateMap(void)
 					}
 				}
 			}
+			drawRobotMarker(paint, self_x, self_y, theta, robot_id, color, positions[i].self_conf);
 		}
 	}
 	image->setPixmap(map);
@@ -1057,8 +1080,8 @@ QColor Interface::getColor(const char *color_name)
 		return QColor(0x8E, 0xFF, 0x8E);
 	} else if(!strcmp(color_name, "blue")) {
 		return QColor(0x8E, 0x8E, 0xFF);
-	} else if(!strcmp(color_name, "orange")) {
-		return QColor(0xFF, 0xA5, 0xA0);
+	} else if(!strcmp(color_name, "gray")) {
+		return QColor(0x9F, 0xA5, 0xA0);
 	} else {
 		return QColor(0x00, 0x00, 0x00);
 	}
@@ -1172,15 +1195,30 @@ void Interface::displaySizeChanged(int value)
 	settings->setValue("size/display_minimum_height", value);
 }
 
+void Interface::robotMarkerSizeChanged(int value)
+{
+	settings->setValue("marker/robot_size", value);
+	settings->setValue("marker/direction_marker_length", static_cast<int>(value * (4.0 / 3.0)));
+}
+
+void Interface::robotMarkerLineWidthChanged(int value)
+{
+	settings->setValue("marker/pen_size", value);
+}
+
 void Interface::openSettingWindow(void)
 {
 	statusBar->showMessage(QString("setting"));
 	SettingDialog dialog(this);
 	const int font_size = settings->value("size/font_size").toInt();
 	const int display_minimum_height = settings->value("size/display_minimum_height").toInt();
-	dialog.setDefaultParameters(font_size, display_minimum_height);
+	const int robot_marker_size = settings->value("marker/robot_size").toInt();
+	const int robot_marker_line_width = settings->value("marker/pen_size").toInt();
+	dialog.setDefaultParameters(font_size, display_minimum_height, robot_marker_size, robot_marker_line_width);
 	connect(&dialog, SIGNAL(fontSizeChanged(int)), this, SLOT(gameStateFontSizeChanged(int)));
 	connect(&dialog, SIGNAL(displaySizeChanged(int)), this, SLOT(displaySizeChanged(int)));
+	connect(&dialog, SIGNAL(robotMarkerSizeChanged(int)), this, SLOT(robotMarkerSizeChanged(int)));
+	connect(&dialog, SIGNAL(robotMarkerLineWidthChanged(int)), this, SLOT(robotMarkerLineWidthChanged(int)));
 	dialog.show();
 	dialog.exec();
 }

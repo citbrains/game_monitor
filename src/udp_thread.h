@@ -10,7 +10,8 @@
 static const int NUM_PLAYERS = 6;
 static const int COMM_INFO_PORT = 3737;
 static const int MAX_COMM_INFO_OBJ = 7;
-static const int MAX_STRING = 74;
+static const int MAX_STRING = 74-32;
+static const int MAX_BEHAVIOR_STRING = 32;
 
 static const unsigned char COMM_EXIST = 0x80;
 static const unsigned char COMM_OUR_SIDE = 0x40;
@@ -37,6 +38,7 @@ struct comm_info_T {
 	unsigned char temperature;
 	unsigned char hishest_servo;
 	unsigned char command[MAX_STRING];
+	unsigned char behavior_name[MAX_BEHAVIOR_STRING];
 };
 
 Q_DECLARE_METATYPE(comm_info_T);

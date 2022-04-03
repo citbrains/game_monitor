@@ -63,7 +63,7 @@ int LogWriter::stopRecord(void)
 int LogWriter::write(int id, const char *color, int fps, double voltage,
 	int posx, int posy, float posth, int ballx, int bally,
 	int goal_pole_x1, int goal_pole_y1, int goal_pole_x2, int goal_pole_y2,
-	const char *str, int cf_own, int cf_ball)
+	const char *str, const char *behavior_name, int cf_own, int cf_ball)
 {
 	time_t timer;
 	struct tm *local_time;
@@ -83,7 +83,8 @@ int LogWriter::write(int id, const char *color, int fps, double voltage,
 		fprintf(fp, "%d,%d,", goal_pole_x1, goal_pole_y1);
 		fprintf(fp, "%d,%d,", goal_pole_x2, goal_pole_y2);
 		fprintf(fp, "%d,%d,", cf_own, cf_ball);
-		fprintf(fp, "%s", str);
+		fprintf(fp, "%s,", str);
+		fprintf(fp, "%s", behavior_name);
 		fprintf(fp, "\n");
 	}
 	return 0;

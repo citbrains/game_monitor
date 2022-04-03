@@ -127,7 +127,7 @@ public:
 
 class PositionMarker {
 public:
-	PositionMarker() : self_conf(0.0), ball_conf(0.0), voltage(0.0), temperature(0.0), colornum(0), enable_pos(false), enable_ball(false), enable_goal_pole{false, false} { color[0] = '\0'; }
+	PositionMarker() : self_conf(0.0), ball_conf(0.0), voltage(0.0), temperature(0.0), colornum(0), enable_pos(false), enable_ball(false), enable_goal_pole{false, false}, enable_target_pos(false) { color[0] = '\0'; }
 	double self_conf;
 	double ball_conf;
 	double voltage;
@@ -136,12 +136,15 @@ public:
 	bool enable_pos;
 	bool enable_ball;
 	bool enable_goal_pole[2];
+	bool enable_target_pos;
 	struct tm lastReceiveTime;
 	char color[20];
 	Pos pos; /* self position */
 	Pos ball; /* ball position */
 	Pos goal_pole[2]; /* goal pole position */
+	Pos target_pos;
 	std::string message;
+	std::string behavior_name;
 };
 
 class LogDataRobotComm {
@@ -259,8 +262,9 @@ private:
 	void createMenus(void);
 	void drawTeamMarker(QPainter &, const int, const int);
 	void drawRobotMarker(QPainter &, const int, const int, const double, const int, const QColor, const double);
-	void drawRobotInformation(QPainter &, const int, const int, const double, const int, const QColor, const double, const double, const std::string, const double, const double);
+	void drawRobotInformation(QPainter &, const int, const int, const double, const int, const QColor, const double, const double, const std::string, const std::string, const double, const double);
 	void drawBallMarker(QPainter &, const int, const int, const int, const int, const int, const int);
+	void drawTargetPosMarker(QPainter &, const int, const int, const int, const int);
 	void drawGoalPostMarker(QPainter &, const int, const int, const int, const int);
 	void drawHighlightCircle(QPainter &, const int, const int);
 
@@ -299,6 +303,8 @@ private slots:
 	void openSettingWindow(void);
 	void gameStateFontSizeChanged(int);
 	void displaySizeChanged(int);
+	void robotMarkerSizeChanged(int);
+	void robotMarkerLineWidthChanged(int);
 };
 
 #endif // INTERFACE_H

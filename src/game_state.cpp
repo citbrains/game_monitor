@@ -1,4 +1,3 @@
-#include "stdio.h"
 #include "game_state.h"
 
 GameState::GameState() : m_game_state(0), m_remaining_time(0), m_secondary_time(0), m_score1(0), m_score2(0), f_update_score1(false), f_update_score2(false)

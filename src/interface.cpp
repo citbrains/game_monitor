@@ -108,7 +108,7 @@ void Interface::initializeConfig(void)
 	// marker configurations
 	settings->setValue("marker/pen_size", settings->value("marker/pen_size", 6));
 	settings->setValue("marker/robot_size", settings->value("marker/robot_size", 15));
-	settings->setValue("marker/ball_size", settings->value("marker/ball_size", 6));
+	settings->setValue("marker/ball_size", settings->value("marker/ball_size", 12));
 	settings->setValue("marker/goal_pole_size", settings->value("marker/goal_pole_size", 5));
 	settings->setValue("marker/direction_marker_length", settings->value("marker/direction_marker_length", 20));
 	settings->setValue("marker/font_size", settings->value("marker/font_size", 24));

@@ -6,7 +6,7 @@
 #include <QtCore>
 
 #include "hpl_types.h"
-#include "new_infoshare.h"
+#include "infoshare.h"
 
 
 Q_DECLARE_METATYPE(Citbrains::infosharemodule::OtherRobotInfomation);

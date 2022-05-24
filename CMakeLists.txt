@@ -7,8 +7,11 @@ if(CMAME_COMPILER_IS_GNUCXX)
 endif()
 set(CMAKE_CXX_STANDARD 11)
 
+STRING(APPEND new_infoshare_path "/home/citbrains/citbrains_humanoid/for2050/src/new_infoshare")
+STRING(APPEND hpl_path "/home/citbrains/citbrains_humanoid/for2050/src/HPL")
+STRING(APPEND hc_server_path "/home/citbrains/citbrains_humanoid/for2050/src/HCServer")
 
-add_subdirectory(src/infoshare)
+add_subdirectory(${new_infoshare_path} ./new_infoshare)
 
 set(SRCS
 	src/interface.cpp
@@ -61,7 +64,11 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 include_directories(src
-		src/infoshare
+	${new_infoshare_path}
+	${new_infoshare_path}/socket
+	${hpl_path}
+	${CMAKE_CURRENT_BINARY_DIR}/new_infoshare
+	${hc_server_path}
 	)
 add_executable(game_monitor ${SRCS} ${MOC_SRCS} ${RES_SORUCES})
 target_link_libraries(game_monitor
@@ -74,3 +81,6 @@ target_link_libraries(game_monitor
 message(STATUS "create log & videos directories")
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/log)
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/videos)
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/new_infoshare/command_dict.dat ${CMAKE_CURRENT_BINARY_DIR}/new_infoshare/behavior_name_dict.dat
+		DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )

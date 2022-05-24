@@ -328,8 +328,10 @@ void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomatio
 	int color, id;
 
 	// MAGENTA, CYAN
-	color = (int)(comm_info.id_ & 0x80) >> 7;
-	id    = (int)(comm_info.id_ & 0x7F);
+	color = COLOR_MAGENTA;//(int)comm_info.color_;
+	id    = comm_info.id_;
+	std::cout << "id = " << id << std::endl;
+	num = id-1;
 	positions[num].colornum = color;
 
 	// record time of receive data
@@ -982,8 +984,8 @@ void Interface::updateMap(void)
 	for(int i = 0; i < max_robot_num; i++) {
 		if(positions[i].enable_pos) {
 			bool flag_reverse = false;
-			if((positions[i].colornum == 0 && fReverse) ||
-					(positions[i].colornum == 1 && !fReverse)) {
+			if((positions[i].colornum == 4 && fReverse) ||
+					(positions[i].colornum == 5 && !fReverse)) {
 				flag_reverse = true;
 			}
 			int self_x = positions[i].pos.x;
@@ -1018,8 +1020,8 @@ void Interface::updateMap(void)
 			int self_y = positions[i].pos.y;
 			double theta = positions[i].pos.th;
 			bool flag_reverse = false;
-			if((positions[i].colornum == 0 && fReverse) ||
-					(positions[i].colornum == 1 && !fReverse)) {
+			if((positions[i].colornum == 4 && fReverse) ||
+					(positions[i].colornum == 5 && !fReverse)) {
 				flag_reverse = true;
 			}
 			if(flag_reverse) {

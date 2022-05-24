@@ -31,7 +31,7 @@
 #include <QAction>
 #include <QMenuBar>
 
-#include "udp_thread.h"
+#include "new_udp_thread.h"
 #include "log_writer.h"
 #include "pos_types.h"
 #include "aspect_ratio_pixmap_label.h"
@@ -274,16 +274,16 @@ public:
 	void drawField(void);
 	void dragEnterEvent(QDragEnterEvent *);
 	void dropEvent(QDropEvent *);
-	void decodeUdp(struct comm_info_T, int num);
+	void decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomation, int num);
 	void updateMap(void);
 
 private slots:
-	void decodeData1(struct comm_info_T);
-	void decodeData2(struct comm_info_T);
-	void decodeData3(struct comm_info_T);
-	void decodeData4(struct comm_info_T);
-	void decodeData5(struct comm_info_T);
-	void decodeData6(struct comm_info_T);
+	void decodeData1(struct Citbrains::infosharemodule::OtherRobotInfomation);
+	void decodeData2(struct Citbrains::infosharemodule::OtherRobotInfomation);
+	void decodeData3(struct Citbrains::infosharemodule::OtherRobotInfomation);
+	void decodeData4(struct Citbrains::infosharemodule::OtherRobotInfomation);
+	void decodeData5(struct Citbrains::infosharemodule::OtherRobotInfomation);
+	void decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomation);
 	void setGameState(int);
 	void setRemainingTime(int);
 	void setSecondaryTime(int);

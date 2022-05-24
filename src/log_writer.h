@@ -7,7 +7,7 @@ public:
 	~LogWriter();
 	int startRecord(const char *);
 	int stopRecord(void);
-	int write(int, const char *, int, double, int, int, float, int, int, int, int, int, int, const char *, const char *, int, int);
+	int write(int, const char *, int, double, int, int, float, int, int, int, int, int, int, const std::string &, const std::string &, int, int);
 	void writeScore(const int, const int);
 	void writeRemainingTime(const int);
 	void writeSecondaryTime(const int);

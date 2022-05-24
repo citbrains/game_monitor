@@ -63,7 +63,7 @@ int LogWriter::stopRecord(void)
 int LogWriter::write(int id, const char *color, int fps, double voltage,
 	int posx, int posy, float posth, int ballx, int bally,
 	int goal_pole_x1, int goal_pole_y1, int goal_pole_x2, int goal_pole_y2,
-	const char *str, const char *behavior_name, int cf_own, int cf_ball)
+	const std::string &str, const std::string &behavior_name, int cf_own, int cf_ball)
 {
 	time_t timer;
 	struct tm *local_time;

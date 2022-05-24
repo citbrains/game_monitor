@@ -7,6 +7,9 @@ if(CMAME_COMPILER_IS_GNUCXX)
 endif()
 set(CMAKE_CXX_STANDARD 11)
 
+
+add_subdirectory(src/infoshare)
+
 set(SRCS
 	src/interface.cpp
 	src/interface.h
@@ -14,8 +17,8 @@ set(SRCS
 	src/log_writer.h
 	src/main.cpp
 	src/pos_types.h
-	src/udp_thread.cpp
-	src/udp_thread.h
+	src/new_udp_thread.cpp
+	src/new_udp_thread.h
 	src/aspect_ratio_pixmap_label.cpp
 	src/field_space_manager.cpp
 	src/field_space_manager.h
@@ -28,7 +31,7 @@ set(SRCS
 
 set(MOC_HEADERS
 	src/interface.h
-	src/udp_thread.h
+	src/new_udp_thread.h
 	src/aspect_ratio_pixmap_label.h
 	src/setting_dialog.h
 )
@@ -57,11 +60,17 @@ if(NOT CMAKE_BUILD_TYPE)
 		"Default build type: RelWithDebInfo" FORCE)
 endif()
 
-include_directories(src)
+include_directories(src
+		src/infoshare
+	)
 add_executable(game_monitor ${SRCS} ${MOC_SRCS} ${RES_SORUCES})
 target_link_libraries(game_monitor
 	${QT_LIBRARIES}
 	Qt5::Widgets
 	Qt5::Network
+	infoshareLib
 )
 
+message(STATUS "create log & videos directories")
+file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/log)
+file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/videos)

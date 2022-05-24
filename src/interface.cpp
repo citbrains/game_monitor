@@ -21,7 +21,7 @@ static inline int distance(const int x1, const int y1, const int x2, const int y
 
 Interface::Interface(): fLogging(true), fReverse(false), fViewGoalpost(false), fViewRobotInformation(true), fPauseLog(false), fRecording(false), fViewSelfPosConf(true), score_team1(0), score_team2(0), max_robot_num(6), log_speed(1), field_param(FieldParameter()), field_space(1040, 740)
 {
-	qRegisterMetaType<comm_info_T>("comm_info_T");
+	qRegisterMetaType<Citbrains::infosharemodule::OtherRobotInfomation>("Citbrains::infosharemodule::OtherRobotInfomation");
 	setAcceptDrops(true);
 	log_writer.setEnable();
 	positions = std::vector<PositionMarker>(max_robot_num);
@@ -118,7 +118,7 @@ void Interface::initializeConfig(void)
 	settings->setValue("size/font_size", settings->value("size/font_size", 48));
 	settings->setValue("size/display_minimum_height", settings->value("size/display_minimum_height", 50));
 	// using UDP communication port offset
-	settings->setValue("network/port", settings->value("network/port", 7110));
+	settings->setValue("network/port", settings->value("network/port", 7120));
 }
 
 void Interface::createWindow(void)
@@ -268,12 +268,12 @@ void Interface::dropEvent(QDropEvent *e)
 
 void Interface::connection(void)
 {
-	connect(th[0], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData1(struct comm_info_T)));
-	connect(th[1], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData2(struct comm_info_T)));
-	connect(th[2], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData3(struct comm_info_T)));
-	connect(th[3], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData4(struct comm_info_T)));
-	connect(th[4], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData5(struct comm_info_T)));
-	connect(th[5], SIGNAL(receiveData(struct comm_info_T)), this, SLOT(decodeData6(struct comm_info_T)));
+	connect(th[0], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData1(struct Citbrains::infosharemodule::OtherRobotInfomation)));
+	connect(th[1], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData2(struct Citbrains::infosharemodule::OtherRobotInfomation)));
+	connect(th[2], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData3(struct Citbrains::infosharemodule::OtherRobotInfomation)));
+	connect(th[3], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData4(struct Citbrains::infosharemodule::OtherRobotInfomation)));
+	connect(th[4], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData5(struct Citbrains::infosharemodule::OtherRobotInfomation)));
+	connect(th[5], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomation)));
 	connect(reverse, SIGNAL(stateChanged(int)), this, SLOT(reverseField(int)));
 	connect(log1Button, SIGNAL(clicked(void)), this, SLOT(logSpeed1(void)));
 	connect(log2Button, SIGNAL(clicked(void)), this, SLOT(logSpeed2(void)));
@@ -287,49 +287,49 @@ void Interface::connection(void)
 	connect(gc_thread, SIGNAL(scoreChanged2(int)), this, SLOT(setScore2(int)));
 }
 
-void Interface::decodeData1(struct comm_info_T comm_info)
+void Interface::decodeData1(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
 {
 	decodeUdp(comm_info, 0);
 	statusBar->showMessage(QString("Receive data from Robot 1"));
 }
 
-void Interface::decodeData2(struct comm_info_T comm_info)
+void Interface::decodeData2(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
 {
 	decodeUdp(comm_info, 1);
 	statusBar->showMessage(QString("Receive data from Robot 2"));
 }
 
-void Interface::decodeData3(struct comm_info_T comm_info)
+void Interface::decodeData3(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
 {
 	decodeUdp(comm_info, 2);
 	statusBar->showMessage(QString("Receive data from Robot 3"));
 }
 
-void Interface::decodeData4(struct comm_info_T comm_info)
+void Interface::decodeData4(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
 {
 	decodeUdp(comm_info, 3);
 	statusBar->showMessage(QString("Receive data from Robot 4"));
 }
 
-void Interface::decodeData5(struct comm_info_T comm_info)
+void Interface::decodeData5(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
 {
 	decodeUdp(comm_info, 4);
 	statusBar->showMessage(QString("Receive data from Robot 5"));
 }
 
-void Interface::decodeData6(struct comm_info_T comm_info)
+void Interface::decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
 {
 	decodeUdp(comm_info, 5);
 	statusBar->showMessage(QString("Receive data from Robot 6"));
 }
 
-void Interface::decodeUdp(struct comm_info_T comm_info, int num)
+void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info, int num)
 {
 	int color, id;
 
 	// MAGENTA, CYAN
-	color = (int)(comm_info.id & 0x80) >> 7;
-	id    = (int)(comm_info.id & 0x7F);
+	color = (int)(comm_info.id_ & 0x80) >> 7;
+	id    = (int)(comm_info.id_ & 0x7F);
 	positions[num].colornum = color;
 
 	// record time of receive data
@@ -341,35 +341,35 @@ void Interface::decodeUdp(struct comm_info_T comm_info, int num)
 
 	// ID and Color
 	QString color_str;
-	if(color == MAGENTA)
+	if(color == COLOR_MAGENTA)
 		color_str = QString("MAGENTA");
 	else
 		color_str = QString("CYAN");
 	color_str = color_str + QString(" ") + QString::number(id);
 	//robot_data->name->setText(color_str);
 	// Self-position confidence
-	positions[num].self_conf = comm_info.cf_own;
+	positions[num].self_conf = comm_info.self_pos_cf_.cf;
 	// Ball position confidence
-	positions[num].ball_conf = comm_info.cf_ball;
+	positions[num].ball_conf = comm_info.ball_gl_cf_.cf;
 	// Role and message
-	if(strstr((const char *)comm_info.command, "Attacker")) {
+	if(comm_info.command_.find("Attacker") != std::string::npos) {
 		// Red
 		strcpy(positions[num].color, "red");
-	} else if(strstr((const char *)comm_info.command, "Neutral")) {
+	} else if(comm_info.command_.find("Neutral") != std::string::npos ) {
 		// Green
 		strcpy(positions[num].color, "green");
-	} else if(strstr((const char *)comm_info.command, "Defender")) {
+	} else if(comm_info.command_.find("Defender") != std::string::npos ) {
 		// Blue
 		strcpy(positions[num].color, "blue");
-	} else if(strstr((const char *)comm_info.command, "Keeper")) {
+	} else if(comm_info.command_.find("Keeper") != std::string::npos ) {
 		// Orange
 		strcpy(positions[num].color, "gray");
 	} else {
 		// Black
 		strcpy(positions[num].color, "black");
 	}
-	positions[num].message = std::string((char *)comm_info.command);
-	positions[num].behavior_name = std::string((char *)comm_info.behavior_name);
+	positions[num].message = comm_info.command_;
+	positions[num].behavior_name = comm_info.current_behavior_name_;
 
 	positions[num].enable_pos = false;
 	positions[num].enable_ball = false;
@@ -377,41 +377,44 @@ void Interface::decodeUdp(struct comm_info_T comm_info, int num)
 	positions[num].enable_goal_pole[1] = false;
 	positions[num].enable_target_pos = false;
 	int goal_pole_index = 0;
-	for(int i = 0; i < MAX_COMM_INFO_OBJ; i++) {
-		Object obj;
-		bool exist = getCommInfoObject(comm_info.object[i], &obj);
-		if(!exist) continue;
-		if(obj.type == NONE) continue;
-		if(obj.type == SELF_POS) {
-			positions[num].pos = globalPosToImagePos(obj.pos);
-			positions[num].enable_pos  = true;
-		}
-		if(obj.type == BALL) {
-			positions[num].ball = globalPosToImagePos(obj.pos);
-			positions[num].enable_ball = true;
-		}
-		if(obj.type == GOAL_POLE) {
-			if(goal_pole_index >= 2) continue;
-			positions[num].goal_pole[goal_pole_index] = globalPosToImagePos(obj.pos);
-			positions[num].enable_goal_pole[goal_pole_index] = true;
-			goal_pole_index++;
-		}
-		if(obj.type == ENEMY) {
-			positions[num].target_pos = globalPosToImagePos(obj.pos);
-			positions[num].enable_target_pos = true;
+	if(comm_info.our_robot_gl_.size())
+	{
+		positions[num].pos = globalPosToImagePos(Pos(comm_info.our_robot_gl_.at(0).x, comm_info.our_robot_gl_.at(0).y, comm_info.our_robot_gl_.at(0).th));
+		positions[num].enable_pos = true;
+
+		std::cout << "our_robot_gl_ : " << comm_info.our_robot_gl_.at(0).x << ", " <<  comm_info.our_robot_gl_.at(0).y << ", " <<  comm_info.our_robot_gl_.at(0).th << std::endl;
+		std::cout << "self_pos_cf_  : " << comm_info.self_pos_cf_.pos.x << ", " << comm_info.self_pos_cf_.pos.y << ", " << comm_info.self_pos_cf_.pos.th << std::endl;
+	}
+	if(comm_info.ball_gl_cf_.is_detect)
+	{
+		positions[num].ball = globalPosToImagePos(Pos(comm_info.ball_gl_cf_.pos.x, comm_info.ball_gl_cf_.pos.y, comm_info.ball_gl_cf_.pos.th));
+		positions[num].enable_ball = true;
+	}
+	if(comm_info.black_pole_gl_.size())
+	{
+		for(int i = 0;i < comm_info.black_pole_gl_.size();i++)
+		{
+			positions[num].goal_pole[i] = globalPosToImagePos(Pos(comm_info.black_pole_gl_.at(i).x, comm_info.black_pole_gl_.at(i).y, comm_info.black_pole_gl_.at(i).th));
+			positions[num].enable_goal_pole[i] = true;
 		}
 	}
+	if(comm_info.target_pos_vec_.size())
+	{
+		positions[num].target_pos = globalPosToImagePos(Pos(comm_info.target_pos_vec_.at(0).x, comm_info.target_pos_vec_.at(0).y, comm_info.target_pos_vec_.at(0).th));
+		positions[num].enable_target_pos = true;
+	}
+
 	updateMap();
 	// Voltage
-	const double voltage = (comm_info.voltage << 3) / 100.0;
+	const double voltage = (comm_info.voltage_ << 3) / 100.0;
 	positions[num].voltage = voltage;
-	positions[num].temperature = comm_info.temperature;
-	log_writer.write(num + 1, color_str.toStdString().c_str(), (int)comm_info.fps, (double)voltage,
+	positions[num].temperature = comm_info.temperature_;
+	log_writer.write(num + 1, color_str.toStdString().c_str(), (int)comm_info.fps_, (double)voltage,
 		(int)positions[num].pos.x, (int)positions[num].pos.y, (float)positions[num].pos.th,
 		(int)positions[num].ball.x, (int)positions[num].ball.y,
 		(int)positions[num].goal_pole[0].x, (int)positions[num].goal_pole[0].y,
 		(int)positions[num].goal_pole[1].x, (int)positions[num].goal_pole[1].y,
-		(const char *)comm_info.command, (const char *)comm_info.behavior_name, (int)comm_info.cf_own, (int)comm_info.cf_ball);
+		comm_info.command_, comm_info.current_behavior_name_, (int)comm_info.self_pos_cf_.cf, (int)comm_info.ball_gl_cf_.cf);
 }
 
 void Interface::setGameState(int game_state)

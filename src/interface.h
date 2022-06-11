@@ -133,7 +133,7 @@ public:
 	double voltage;
 	double temperature;
 	int colornum;
-	int fps_
+	int fps_;
 	bool enable_pos;
 	bool enable_ball;
 	bool enable_goal_pole[2];

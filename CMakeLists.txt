@@ -7,9 +7,9 @@ if(CMAME_COMPILER_IS_GNUCXX)
 endif()
 set(CMAKE_CXX_STANDARD 11)
 
-STRING(APPEND new_infoshare_path "ENV{HOME}/citbrains_humanoid/for2050/src/new_infoshare")
-STRING(APPEND hpl_path "ENV{HOME}/citbrains_humanoid/for2050/src/HPL")
-STRING(APPEND hc_server_path "ENV{HOME}/citbrains_humanoid/for2050/src/HCServer")
+STRING(APPEND new_infoshare_path "$ENV{HOME}/citbrains_humanoid/for2050/src/new_infoshare")
+STRING(APPEND hpl_path "$ENV{HOME}/citbrains_humanoid/for2050/src/HPL")
+STRING(APPEND hc_server_path "$ENV{HOME}/citbrains_humanoid/for2050/src/HCServer")
 
 add_subdirectory(${new_infoshare_path} ./new_infoshare)
 

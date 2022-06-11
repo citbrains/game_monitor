@@ -411,6 +411,7 @@ void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomatio
 	const double voltage = (comm_info.voltage_ << 3) / 100.0;
 	positions[num].voltage = voltage;
 	positions[num].temperature = comm_info.temperature_;
+	positions[num].fps_ = comm_info.fps_;
 	log_writer.write(num + 1, color_str.toStdString().c_str(), (int)comm_info.fps_, (double)voltage,
 		(int)positions[num].pos.x, (int)positions[num].pos.y, (float)positions[num].pos.th,
 		(int)positions[num].ball.x, (int)positions[num].ball.y,
@@ -854,7 +855,7 @@ void Interface::drawRobotMarker(QPainter &painter, const int self_x, const int s
 	}
 }
 
-void Interface::drawRobotInformation(QPainter &painter, const int self_x, const int self_y, const double theta, const int robot_id, const QColor marker_color, const double self_conf, const double ball_conf, const std::string msg, const std::string behavior_name, const double voltage, const double temperature)
+void Interface::drawRobotInformation(QPainter &painter, const int self_x, const int self_y, const double theta, const int robot_id, const QColor marker_color, const double self_conf, const double ball_conf, const std::string msg, const std::string behavior_name, const double voltage, const double temperature, const int fps)
 {
 	constexpr int frame_width = 330;
 	constexpr int frame_height = 120;
@@ -890,7 +891,7 @@ void Interface::drawRobotInformation(QPainter &painter, const int self_x, const 
 	QString behavior_str(behavior_name.c_str());
 	constexpr int font_offset_2y = 20 + font_size / 2 + (font_size + 15) * 1;
 	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_2y, behavior_str);
-	QString voltage_str = QString::number(voltage) + "[V] / " + QString::number(temperature) + "[C]";
+	QString voltage_str = QString::number(voltage) + "[V] / " + QString::number(temperature) + "[C] /" + QString::number(fps) "[fps]";
 	constexpr int font_offset_3y = 20 + font_size / 2 + (font_size + 15) * 2;
 	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_3y, voltage_str);
 
@@ -1032,7 +1033,7 @@ void Interface::updateMap(void)
 			const int robot_id = i + 1;
 			const QColor color = getColor(positions[i].color);
 			if(fViewRobotInformation)
-				drawRobotInformation(paint, self_x, self_y, theta, robot_id, color, positions[i].self_conf, positions[i].ball_conf, positions[i].message, positions[i].behavior_name, positions[i].voltage, positions[i].temperature);
+				drawRobotInformation(paint, self_x, self_y, theta, robot_id, color, positions[i].self_conf, positions[i].ball_conf, positions[i].message, positions[i].behavior_name, positions[i].voltage, positions[i].temperature, positions[i].fps_);
 			if(positions[i].enable_ball && positions[i].ball_conf > 0) {
 				int ball_x = positions[i].ball.x;
 				int ball_y = positions[i].ball.y;

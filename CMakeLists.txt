@@ -7,9 +7,9 @@ if(CMAME_COMPILER_IS_GNUCXX)
 endif()
 set(CMAKE_CXX_STANDARD 11)
 
-STRING(APPEND new_infoshare_path "/home/citbrains/citbrains_humanoid/for2050/src/new_infoshare")
-STRING(APPEND hpl_path "/home/citbrains/citbrains_humanoid/for2050/src/HPL")
-STRING(APPEND hc_server_path "/home/citbrains/citbrains_humanoid/for2050/src/HCServer")
+STRING(APPEND new_infoshare_path "$ENV{HOME}/citbrains_humanoid/for2050/src/new_infoshare")
+STRING(APPEND hpl_path "$ENV{HOME}/citbrains_humanoid/for2050/src/HPL")
+STRING(APPEND hc_server_path "$ENV{HOME}/citbrains_humanoid/for2050/src/HCServer")
 
 add_subdirectory(${new_infoshare_path} ./new_infoshare)
 
@@ -83,4 +83,4 @@ file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/log)
 file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/videos)
 
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/new_infoshare/command_dict.dat ${CMAKE_CURRENT_BINARY_DIR}/new_infoshare/behavior_name_dict.dat
-		DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+		DESTINATION ${CMAKE_SOURCE_DIR} )

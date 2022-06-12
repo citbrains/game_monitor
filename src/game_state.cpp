@@ -11,7 +11,8 @@ GameState::~GameState()
 void GameState::setData(const char *in_data, const unsigned int data_len)
 {
 	const unsigned char *data = reinterpret_cast<const unsigned char *>(in_data);
-	constexpr unsigned int packet_size = 640;
+	//constexpr unsigned int packet_size = 640;
+	constexpr unsigned int packet_size = 688;
 	if(data_len != packet_size)
 		return;
 	decodeData(data + 0);

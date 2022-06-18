@@ -408,7 +408,7 @@ void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomatio
 
 	updateMap();
 	// Voltage
-	const double voltage = (comm_info.voltage_ << 3) / 100.0;
+	const double voltage = comm_info.voltage_;
 	positions[num].voltage = voltage;
 	positions[num].temperature = comm_info.temperature_;
 	positions[num].fps_ = comm_info.fps_;

@@ -8,7 +8,12 @@ if [ $# -ne 1 ] ;then
 	echo "masterでいい場合はエンターを押してください"
 
 	read -p "ok? (Y/n): " yn
-	case "$yn" in [nN]*) echo abort ; exit ;; *) branch_name="master"; ;; esac
+	case "$yn" in [nN]*) echo "branch名を指定してください" ; fg="1" ;; 
+		*) branch_name="master"; ;; esac
+	
+	if [ $fg = "1" ]; then
+		read -p 'ブランチ名を入力してください : ' branch_name
+	fi
 
 	#read -p "Hit enter: " yn
 	#echo $yn

@@ -9,7 +9,7 @@ if [ $# -ne 1 ] ;then
 
 	read -p "ok? (Y/n): " yn
 	case "$yn" in [nN]*) echo "branch名を指定してください" ; fg="1" ;; 
-		*) branch_name="master"; ;; esac
+		*) branch_name="master"; fg="4"; ;; esac
 	
 	if [ $fg = "1" ]; then
 		read -p 'ブランチ名を入力してください : ' branch_name

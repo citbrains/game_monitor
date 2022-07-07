@@ -330,7 +330,6 @@ void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomatio
 	// MAGENTA, CYAN
 	color = COLOR_MAGENTA;//(int)comm_info.color_;
 	id    = comm_info.id_;
-	std::cout << "id = " << id << std::endl;
 	num = id-1;
 	positions[num].colornum = color;
 
@@ -384,8 +383,6 @@ void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomatio
 		positions[num].pos = globalPosToImagePos(Pos(comm_info.our_robot_gl_.at(0).x, comm_info.our_robot_gl_.at(0).y, comm_info.our_robot_gl_.at(0).th));
 		positions[num].enable_pos = true;
 
-		std::cout << "our_robot_gl_ : " << comm_info.our_robot_gl_.at(0).x << ", " <<  comm_info.our_robot_gl_.at(0).y << ", " <<  comm_info.our_robot_gl_.at(0).th << std::endl;
-		std::cout << "self_pos_cf_  : " << comm_info.self_pos_cf_.pos.x << ", " << comm_info.self_pos_cf_.pos.y << ", " << comm_info.self_pos_cf_.pos.th << std::endl;
 	}
 	if(comm_info.ball_gl_cf_.is_detect)
 	{

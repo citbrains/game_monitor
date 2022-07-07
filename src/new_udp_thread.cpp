@@ -10,7 +10,6 @@ inline static double radian(double degree)
 
 UdpServer::UdpServer(int port_num)
 {
-	std::cout << "UdpServer : " << __FUNCTION__ << std::endl;
 	udpSocket = new QUdpSocket(this);
 	udpSocket->bind(QHostAddress::Any, port_num);
 	connect(udpSocket, SIGNAL(readyRead()), this, SLOT(readPendingDatagrams()));
@@ -18,9 +17,7 @@ UdpServer::UdpServer(int port_num)
 
 void UdpServer::readPendingDatagrams(void)
 {
-	std::cout << "UdpServer : " << __FUNCTION__ << std::endl;
 	while(udpSocket->hasPendingDatagrams()) {
-		std::cout << "UdpServer : " << __FUNCTION__ << " while in" << std::endl;
 		QByteArray datagrams;
 		datagrams.resize(udpSocket->pendingDatagramSize());
 		QHostAddress sender;

@@ -17,7 +17,7 @@ void GameState::setData(const char *in_data, const unsigned int data_len)
 		return;
 	decodeData(data + 0);
 	decodeTeamInfo(data + 24);
-	decodeTeamInfo(data + 24 + 308);
+	decodeTeamInfo(data + 24 + 332);
 }
 
 void GameState::decodeData(const unsigned char *data)

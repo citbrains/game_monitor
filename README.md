@@ -28,75 +28,59 @@ Functions:
 
 ## Requirements
 
-* [Qt](https://www.qt.io/) (Version: 5.3 or greater)
+<details>
+<summary>Qt (Version: 5.3 or greater)</summary>
+URL: https://www.qt.io/
+
+### インストール法
+`sudo apt install qtbase5-dev qttools5-dev-tools qt5-default`
+</details>
+<details>
+<summary>protocol buf</summary>
+URL: https://developers.google.com/protocol-buffers
+
+### インストール法
+```bash
+wget "https://github.com/protocolbuffers/protobuf/releases/download/v21.1/protobuf-all-21.1.tar.gz" -O protobuf-all-21.1.tar.gz
+tar -zxvf protobuf-all-21.1.tar.gz
+cd protobuf-3.21.1
+./configure
+make -j$(nproc) # $(nproc) ensures it uses all cores for compilation
+make check -j$(nproc)
+sudo make install
+sudo ldconfig # refresh shared library cache.
+```
+</details>
+
+<details>
+<summary>boost</summary>
+URL: https://www.boost.org/
+
+### インストール法
+`sudo apt install libboost-all-dev`
+</details>
+
+<details>
+<summary>sdl 1.2</summary>
+URL: 
+
+### インストール法
+`sudo apt install libsdl1.2-dev`
+</details>
 
 ## How to build
-
-### Linux (Ubuntu 14.04)
-
-1. Install libraries.
-
-```shell
-git checkout ubuntu14.04
-apt install build-essential
-```
-
-This application require Qt 5.3 or greater.
-But, Qt version is 5.2 if install using `apt-get`.
-You need install Qt from source code.
-
-### Linux (Ubuntu 16.04)
-
-1. Install libraries.
-
-```
-apt install build-essential qt5-default qt5-qmake qtbase5-dev-tools qtmultimedia5-dev
-```
-
-2. Build application.
-
-```
-./qt_make.sh
-```
 
 ### Linux (Ubuntu 18.04)
 
 1. Install libraries.
 
-```
-apt install qt5-default qtmultimedia5-dev
-```
+上記参照
 
 2. Build application.
 
-```
-./qt_make.sh
-```
 
-### Mac OS
 
-1. Install libraries.
 
-```
-brew update -all
-brew install qt5
-export PATH="/usr/local/Cellar/qt/5.12.0/bin:$PATH"
-```
-
-2. Build application.
-
-```
-./qt_make.sh
-```
-
-### Windows
-
-1.  Run `qt_make.bat` script in Developer Command Prompt window.  
-[How to open](https://msdn.microsoft.com/en-us/library/f35ctcxw.aspx "Jump to Microsoft document page")
-
-Or  
-
-1. Build on Visual Studio using CMake (`CMakeLists.txt`).
 
 ## License
 

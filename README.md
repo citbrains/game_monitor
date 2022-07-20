@@ -76,7 +76,27 @@ URL:
 
 上記参照
 
-2. Build application.
+2. Build application.  
+2.1 homeに`citbrains_humanoid`をcloneする  
+https  
+`git clone https://github.com/citbrains/game_monitor.git`  
+ssh  
+`git@github.com:citbrains/game_monitor.git`  
+2.2 game_monitorを任意の場所にclone  
+https  
+`git clone https://github.com/citbrains/game_monitor.git`  
+ssh  
+`git clone git@github.com:citbrains/game_monitor.git`  
+2.3 game_monitorに移動  
+2.4 support_new_infoshareブランチに移動  
+`git checkout support_new_infoshare`  
+2.5 buildする  
+```bash
+mkdir build
+cd build
+cmake .. #build方法は例(ninjaでも可能)
+make -jX install #Xは自分のスレッド数
+```
 
 
 

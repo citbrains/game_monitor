@@ -98,9 +98,8 @@ cmake .. #build方法は例(ninjaでも可能)
 make -jX install #Xは自分のスレッド数
 ```
 
-
-
-
+3. 起動方法  
+`./start_GM.sh`
 
 ## License
 

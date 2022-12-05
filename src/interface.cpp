@@ -19,7 +19,7 @@ static inline int distance(const int x1, const int y1, const int x2, const int y
 	return std::sqrt(x * x + y * y);
 }
 
-Interface::Interface(): fLogging(true), fReverse(false), fViewGoalpost(false), fViewRobotInformation(true), fPauseLog(false), fRecording(false), fViewSelfPosConf(true), score_team1(0), score_team2(0), max_robot_num(6), log_speed(1), field_param(FieldParameter()), field_space(1040, 740)
+Interface::Interface(): fLogging(true), fReverse(false), fViewGoalpost(false), fViewRobotInformation(true), fPauseLog(false), fRecording(false), fViewSelfPosConf(true), score_team1(0), score_team2(0), max_robot_num(6), log_speed(1), field_param(FieldParameter()), field_space(1040, 740), th(8)
 {
 	qRegisterMetaType<Citbrains::infosharemodule::OtherRobotInfomation>("Citbrains::infosharemodule::OtherRobotInfomation");
 	setAcceptDrops(true);
@@ -274,6 +274,8 @@ void Interface::connection(void)
 	connect(th[3], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData4(struct Citbrains::infosharemodule::OtherRobotInfomation)));
 	connect(th[4], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData5(struct Citbrains::infosharemodule::OtherRobotInfomation)));
 	connect(th[5], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomation)));
+	connect(th[6], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData7(struct Citbrains::infosharemodule::OtherRobotInfomation)));
+	connect(th[7], SIGNAL(receiveData(struct Citbrains::infosharemodule::OtherRobotInfomation)), this, SLOT(decodeData8(struct Citbrains::infosharemodule::OtherRobotInfomation)));
 	connect(reverse, SIGNAL(stateChanged(int)), this, SLOT(reverseField(int)));
 	connect(log1Button, SIGNAL(clicked(void)), this, SLOT(logSpeed1(void)));
 	connect(log2Button, SIGNAL(clicked(void)), this, SLOT(logSpeed2(void)));
@@ -323,13 +325,30 @@ void Interface::decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomat
 	statusBar->showMessage(QString("Receive data from Robot 6"));
 }
 
+void Interface::decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
+{
+	decodeUdp(comm_info, 6);
+	statusBar->showMessage(QString("Receive data from Robot 7"));
+}
+
+void Interface::decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
+{
+	decodeUdp(comm_info, 7);
+	statusBar->showMessage(QString("Receive data from Robot 8"));
+}
+
 void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info, int num)
 {
 	int color, id;
 
 	// MAGENTA, CYAN
-	color = COLOR_MAGENTA;//(int)comm_info.color_;
+	//color = COLOR_MAGENTA;//(int)comm_info.color_;
 	id    = comm_info.id_;
+	if((id & 8) == 8)
+	{
+		id -= 8;
+		color = COLOR_MAGENTA;
+	}
 	num = id-1;
 	positions[num].colornum = color;
 

@@ -285,6 +285,8 @@ private slots:
 	void decodeData4(struct Citbrains::infosharemodule::OtherRobotInfomation);
 	void decodeData5(struct Citbrains::infosharemodule::OtherRobotInfomation);
 	void decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomation);
+	void decodeData7(struct Citbrains::infosharemodule::OtherRobotInfomation);
+	void decodeData8(struct Citbrains::infosharemodule::OtherRobotInfomation);
 	void setGameState(int);
 	void setRemainingTime(int);
 	void setSecondaryTime(int);

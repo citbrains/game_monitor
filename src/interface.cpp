@@ -325,13 +325,13 @@ void Interface::decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomat
 	statusBar->showMessage(QString("Receive data from Robot 6"));
 }
 
-void Interface::decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
+void Interface::decodeData7(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
 {
 	decodeUdp(comm_info, 6);
 	statusBar->showMessage(QString("Receive data from Robot 7"));
 }
 
-void Interface::decodeData6(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
+void Interface::decodeData8(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info)
 {
 	decodeUdp(comm_info, 7);
 	statusBar->showMessage(QString("Receive data from Robot 8"));

@@ -19,7 +19,7 @@ static inline int distance(const int x1, const int y1, const int x2, const int y
 	return std::sqrt(x * x + y * y);
 }
 
-Interface::Interface(): fLogging(true), fReverse(false), fViewGoalpost(false), fViewRobotInformation(true), fPauseLog(false), fRecording(false), fViewSelfPosConf(true), score_team1(0), score_team2(0), max_robot_num(6), log_speed(1), field_param(FieldParameter()), field_space(1040, 740), th(8)
+Interface::Interface(): fLogging(true), fReverse(false), fViewGoalpost(false), fViewRobotInformation(true), fPauseLog(false), fRecording(false), fViewSelfPosConf(true), score_team1(0), score_team2(0), max_robot_num(8), log_speed(1), field_param(FieldParameter()), field_space(1040, 740)//, th(8)
 {
 	qRegisterMetaType<Citbrains::infosharemodule::OtherRobotInfomation>("Citbrains::infosharemodule::OtherRobotInfomation");
 	setAcceptDrops(true);
@@ -118,7 +118,7 @@ void Interface::initializeConfig(void)
 	settings->setValue("size/font_size", settings->value("size/font_size", 48));
 	settings->setValue("size/display_minimum_height", settings->value("size/display_minimum_height", 50));
 	// using UDP communication port offset
-	settings->setValue("network/port", settings->value("network/port", 3737));
+	settings->setValue("network/port", settings->value("network/port", 7120));
 }
 
 void Interface::createWindow(void)

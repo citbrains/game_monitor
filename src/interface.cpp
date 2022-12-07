@@ -339,7 +339,7 @@ void Interface::decodeData8(struct Citbrains::infosharemodule::OtherRobotInfomat
 
 void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomation comm_info, int num)
 {
-	int color, id;
+	int team_color, id;
 
 	// MAGENTA, CYAN
 	//color = COLOR_MAGENTA;//(int)comm_info.color_;
@@ -347,10 +347,12 @@ void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomatio
 	if((id & 8) == 8)
 	{
 		id -= 8;
-		color = COLOR_MAGENTA;
+		id += 4;
+		team_color = COLOR_MAGENTA;
 	}
+	std::cout << "id = " << id << std::endl;
 	num = id-1;
-	positions[num].colornum = color;
+	positions[num].colornum = team_color;
 
 	// record time of receive data
 	time_t timer;
@@ -374,19 +376,24 @@ void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomatio
 	// Role and message
 	if(comm_info.command_.find("Attacker") != std::string::npos) {
 		// Red
-		strcpy(positions[num].color, "red");
+		//strcpy(positions[num].color, "red");
+		positions[num].color.assign(std::string("red"));
 	} else if(comm_info.command_.find("Neutral") != std::string::npos ) {
 		// Green
-		strcpy(positions[num].color, "green");
+		//strcpy(positions[num].color, "green");
+		positions[num].color.assign(std::string("green"));
 	} else if(comm_info.command_.find("Defender") != std::string::npos ) {
 		// Blue
-		strcpy(positions[num].color, "blue");
+		//strcpy(positions[num].color, "blue");
+		positions[num].color.assign(std::string("blue"));
 	} else if(comm_info.command_.find("Keeper") != std::string::npos ) {
 		// Orange
-		strcpy(positions[num].color, "gray");
+		//strcpy(positions[num].color, "gray");
+		positions[num].color.assign(std::string("gray"));
 	} else {
 		// Black
-		strcpy(positions[num].color, "black");
+		//strcpy(positions[num].color, "black");
+		positions[num].color.assign(std::string("black"));
 	}
 	positions[num].message = comm_info.command_;
 	positions[num].behavior_name = comm_info.current_behavior_name_;
@@ -1047,7 +1054,7 @@ void Interface::updateMap(void)
 				theta = theta + M_PI;
 			}
 			const int robot_id = i + 1;
-			const QColor color = getColor(positions[i].color);
+			const QColor color = getColor(positions[i].color.data());
 			if(fViewRobotInformation)
 				drawRobotInformation(paint, self_x, self_y, theta, robot_id, color, positions[i].self_conf, positions[i].ball_conf, positions[i].message, positions[i].behavior_name, positions[i].voltage, positions[i].temperature, positions[i].fps_);
 			if(positions[i].enable_ball && positions[i].ball_conf > 0) {

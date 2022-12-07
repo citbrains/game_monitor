@@ -363,7 +363,7 @@ void Interface::decodeUdp(struct Citbrains::infosharemodule::OtherRobotInfomatio
 
 	// ID and Color
 	QString color_str;
-	if(color == COLOR_MAGENTA)
+	if(team_color == COLOR_MAGENTA)
 		color_str = QString("MAGENTA");
 	else
 		color_str = QString("CYAN");

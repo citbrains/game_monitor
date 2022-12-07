@@ -140,7 +140,7 @@ public:
 	bool enable_target_pos;
 	struct tm lastReceiveTime;
 	//char color[20];
-	std::string color_;
+	std::string color;
 	Pos pos; /* self position */
 	Pos ball; /* ball position */
 	Pos goal_pole[2]; /* goal pole position */

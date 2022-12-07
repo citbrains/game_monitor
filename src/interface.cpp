@@ -772,19 +772,24 @@ void Interface::setData(LogData log_data)
 		char *msg = data.msg;
 		if(strstr((const char *)msg, "Attacker")) {
 			// Red
-			strcpy(positions[num].color, "red");
+			//strcpy(positions[num].color, "red");
+			positions[num].color.assign(std::string("red"));
 		} else if(strstr((const char *)msg, "Neutral")) {
 			// Green
-			strcpy(positions[num].color, "green");
+			//strcpy(positions[num].color, "green");
+			positions[num].color.assign(std::string("green"));
 		} else if(strstr((const char *)msg, "Defender")) {
 			// Blue
-			strcpy(positions[num].color, "blue");
+			//strcpy(positions[num].color, "blue");
+			positions[num].color.assign(std::string("blue"));
 		} else if(strstr((const char *)msg, "Keeper")) {
 			// Orange
-			strcpy(positions[num].color, "gray");
+			//strcpy(positions[num].color, "gray");
+			positions[num].color.assign(std::string("gray"));
 		} else {
 			// Black
-			strcpy(positions[num].color, "black");
+			//strcpy(positions[num].color, "black");
+			positions[num].color.assign(std::string("black"));
 		}
 		positions[num].message = std::string(msg);
 		positions[num].behavior_name = std::string(msg); // TODO

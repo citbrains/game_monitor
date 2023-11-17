@@ -891,7 +891,7 @@ void Interface::drawRobotInformation(QPainter &painter, const int self_x, const 
 	QString behavior_str(behavior_name.c_str());
 	constexpr int font_offset_2y = 20 + font_size / 2 + (font_size + 15) * 1;
 	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_2y, behavior_str);
-	QString voltage_str = QString::number(voltage) + "[V] / " + QString::number(temperature) + "[C] /" + QString::number(fps) + "[fps]";
+	QString voltage_str = QString::number(voltage) + "[V] / " + QString::number(temperature) + "[C] /" + QString::number(fps) + "[Hz]";
 	constexpr int font_offset_3y = 20 + font_size / 2 + (font_size + 15) * 2;
 	painter.drawText(frame_left + font_offset_x, frame_top + font_offset_3y, voltage_str);
 
